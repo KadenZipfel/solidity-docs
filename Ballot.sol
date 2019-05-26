@@ -29,11 +29,14 @@ contract Ballot {
     }
   }
 
-  function giveRightToVote(address voter) public {
+  function giveRightToVote(address[] memory addresses) public {
     require(msg.sender == chairperson, "Only chairperson can give the right to vote.");
-    require(!voters[voter].voted, "This address has already voted");
-    require(voters[voter].weight == 0);
-    voters[voter].weight = 1;
+
+    for (uint i = 0; i < addresses.length; i++) {
+      require(!voters[addresses[i]].voted, "This address has already voted");
+      require(voters[addresses[i]].weight == 0, "This address has already been given the right to vote.");
+      voters[addresses[i]].weight = 1;
+    }
   }
 
   function delegate(address to) public {
